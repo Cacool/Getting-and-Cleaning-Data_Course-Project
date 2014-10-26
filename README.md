@@ -1,5 +1,5 @@
 Getting and Cleaning Data : Course Project
-
+=
 ### Some data files used in the code:
 * 'features.txt': List of all features.
 * 'train/X_train.txt': Training set.
