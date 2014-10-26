@@ -54,20 +54,20 @@ activity_names <- c("Walking", "Walking_Up", "Walking_Down", "Sitting", "Standin
 tidy_data <- data.frame(NULL)
 x_same <- data.frame(NULL)
 
-for(s in 1:subject_length){           			## subject name
-	for(a in activity_names){           		  ## activity name
+for(s in 1:subject_length){           				## subject name
+	for(a in activity_names){           			## activity name
 
-		names <- c(s, a)                		    ## the collection of subject and activity names
+		names <- c(s, a)                		## the collection of subject and activity names
 
 		for(i in 1:rownum){               		
 			name_temp <- c(data_ext[i, "subject"], data_ext[i, "activity"])
-			if(all(names == name_temp)){    	    ## if matching successfully, store the content of this row
+			if(all(names == name_temp)){    	## if matching successfully, store the content of this row
 			x_same <- rbind(x_same, data_ext[i, 3:colnum])
-		}                                 		  ## if
+		}                                 		## if
 		}                                 		
 		
 		x_mean <- sapply(x_same, mean)    		## compute the average we want
-		tidy_data <- rbind(tidy_data, c(names, x_mean))   ## construct the tidy data set
+		tidy_data <- rbind(tidy_data, c(names, x_mean)) ## construct the tidy data set
 		x_same <- data.frame(NULL)        		## for next loop
 
 		}                                 		
