@@ -17,6 +17,8 @@ Some variables in the Data sets：
 ### x data:
   The collection of x training data and test data, which are respectively from train/X_train.txt and test/X_test.txt. The dimension of the collection is 10299 * 561.
 
+Some statements
+=
 These signals were used to estimate variables of the feature vector for each pattern:  
 '-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
 
