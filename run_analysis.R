@@ -23,38 +23,60 @@ features <- read.table("./UCI HAR Dataset/features.txt")
 names(x) <- features[, 2] 
 
 ## merge the training and the test sets to create one data set
-data <- cbind(subject, y, x)    
+data <- cbind(subject, y, x)
 
 ## create condition of matching "mean()" or "std()"
 match_mean <- grepl("mean()", names(data))                  
 match_std <- grepl("std()", names(data))
 match <- match_mean | match_std                             
 
-##extracts the measurements on the mean and standard 
-mean_std <- data[condition] 
+##extracts the measurements on the mean and standard and create a new data set named data_ext
+mean_std <- data[match]
+data_ext <- cbind(subject, y, mean_std)
+names(data_ext) <- c("subject", "activity", names(mean_std))
 
 ## naming the activities 
-data[, "activity"][data[, "activity"] == 1] <- "WALKING"
-data[, "activity"][data[, "activity"] == 2] <- "WALKING_UPSTAIRS"
-data[, "activity"][data[, "activity"] == 3] <- "WALKING_DOWNSTAIRS"
-data[, "activity"][data[, "activity"] == 4] <- "SITTING"
-data[, "activity"][data[, "activity"] == 5] <- "STANDING"
-data[, "activity"][data[, "activity"] == 6] <- "LAYING"
+data_ext[, "activity"][data_ext[, "activity"] == 1] <- "Walking"
+data_ext[, "activity"][data_ext[, "activity"] == 2] <- "Walking_Up"
+data_ext[, "activity"][data_ext[, "activity"] == 3] <- "Walking_Down"
+data-ext[, "activity"][data_ext[, "activity"] == 4] <- "Sitting"
+data_ext[, "activity"][data_ext[, "activity"] == 5] <- "Standing"
+data_ext[, "activity"][data_ext[, "activity"] == 6] <- "Laying"
 
-## creating a new independent tidy data set
-ave <- data["subject"] 
-ave <- cbind(ave, data[, "activity"]) 
+rownum <- nrow(data_ext)
+colnum <- ncol(data_ext)
 
-## get the transposition of x and turn it into data.frame
-x_t <- t(x)                                             
-x_t <- as.data.frame(x_t)
+## initial variables setting
+subject_len <- length(unique(subject[, 1]))
+activity_names <- c("Walking", "Walking_Up", "Walking_Down", "Sitting", "Standing", "Laying")
 
-## compute the average and add it into ave                               
-mean <- sapply(x_t, mean)                                 
-ave <- cbind(ave, mean)                         
-names(ave) <- c("subject", "activity", "ave")      
+## assign NULL to the initial data.frame
+tidy_data <- data.frame(NULL)
+x_same <- data.frame(NULL)
 
-## creating txt file
-write.table(ave, "ave.txt", row.name = FALSE)   
+for(s in 1:subject_length){           			## subject name
+	for(a in activity_names){           		  ## activity name
+
+		names <- c(s, a)                		    ## the collection of subject and activity names
+
+		for(i in 1:rownum){               		
+			name_temp <- c(data_ext[i, "subject"], data_ext[i, "activity"])
+			if(all(names == name_temp)){    	    ## if matching successfully, store the content of this row
+			x_same <- rbind(x_same, data_ext[i, 3:colnum])
+		}                                 		  ## if
+		}                                 		
+		
+		x_mean <- sapply(x_same, mean)    		## compute the average we want
+		tidy_data <- rbind(tidy_data, c(names, x_mean))   ## construct the tidy data set
+		x_same <- data.frame(NULL)        		## for next loop
+
+		}                                 		
+}                                     			
+
+## set the names of tidy data set
+names(tidy_data) <- names(data_ext)   
+
+## creating txt file and store the tidy data
+write.table(tidy_data, "tidy_data_average.txt", row.name = FALSE)   
 
 }
